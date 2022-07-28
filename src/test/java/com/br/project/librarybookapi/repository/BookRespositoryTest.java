@@ -82,7 +82,7 @@ public class BookRespositoryTest {
 		assertThat(deletedBook.getId()).isNull();
 	}
 	
-	private Book createNewBook(String isbn) {
+	public static Book createNewBook(String isbn) {
 		return Book.builder().author("Wanderley").title("A volta dos que não foram").isbn(isbn).build();
 	}
 }

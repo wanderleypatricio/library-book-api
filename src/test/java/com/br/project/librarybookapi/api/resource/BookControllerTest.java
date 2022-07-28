@@ -31,12 +31,14 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.br.project.librarybookapi.dto.BookDTO;
 import com.br.project.librarybookapi.exception.BusinessException;
 import com.br.project.librarybookapi.model.Book;
+import com.br.project.librarybookapi.resource.BookController;
 import com.br.project.librarybookapi.service.BookService;
+import com.br.project.librarybookapi.service.LoanService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
-@WebMvcTest
+@WebMvcTest(controllers = BookController.class)
 @AutoConfigureMockMvc
 public class BookControllerTest {
 
@@ -45,7 +47,10 @@ public class BookControllerTest {
 	MockMvc mvc;
 	
 	@MockBean
-	BookService bookService;	
+	BookService bookService;
+	
+	@MockBean
+	LoanService loanService;
 	
 	@Test
 	@DisplayName("Deve criar um livro com sucesso.")
@@ -251,7 +256,7 @@ public class BookControllerTest {
 		.andExpect(jsonPath("pageable.pageNumber").value(0));
 	}
 	
-	private BookDTO createNewBook() {
+	private static BookDTO createNewBook() {
 		return BookDTO.builder().author("Artur").title("A volta dos que não foram").isbn("123").build();
 	}
 }

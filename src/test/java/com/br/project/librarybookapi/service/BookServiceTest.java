@@ -1,18 +1,18 @@
 package com.br.project.librarybookapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.assertj.core.api.Assertions;
-import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
@@ -25,6 +25,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import com.br.project.librarybookapi.exception.BusinessException;
 import com.br.project.librarybookapi.model.Book;
 import com.br.project.librarybookapi.repository.BookRepository;
+import com.br.project.librarybookapi.service.impl.BookServiceImpl;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -168,7 +169,7 @@ public class BookServiceTest {
 		
 		Page<Book> page = new PageImpl<Book>(lista, pageRequest, 1);
 
-		Mockito.when(repository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+		when(repository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
 		.thenReturn(page);
 		
 		Page<Book> result= service.find(book, pageRequest);
@@ -177,5 +178,20 @@ public class BookServiceTest {
 		assertThat(result.getContent()).isEqualTo(lista);
 		assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
 		assertThat(result.getPageable().getPageSize()).isEqualTo(10);
+	}
+	
+	@Test
+	@DisplayName("deve obter um livro pelo isbn")
+	public void getBookIsbnTest() {
+		String isbn = "1230";
+		when(repository.findByIsbn(isbn)).thenReturn(Optional.of(Book.builder().id((long) 11).isbn(isbn).build()));
+		
+		Optional<Book> book = service.getBookByIsbn(isbn);
+		
+		assertThat(book.isPresent()).isTrue();
+		assertThat(book.get().getId()).isEqualTo(11);
+		assertThat(book.get().getIsbn()).isEqualTo(isbn);
+		
+		verify(repository, times(1)).findByIsbn(isbn);
 	}
 }

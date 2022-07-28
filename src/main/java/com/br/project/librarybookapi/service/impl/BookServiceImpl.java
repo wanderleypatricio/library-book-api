@@ -1,4 +1,4 @@
-package com.br.project.librarybookapi.service;
+package com.br.project.librarybookapi.service.impl;
 
 import java.util.Optional;
 
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.br.project.librarybookapi.exception.BusinessException;
 import com.br.project.librarybookapi.model.Book;
 import com.br.project.librarybookapi.repository.BookRepository;
+import com.br.project.librarybookapi.service.BookService;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -64,6 +65,12 @@ public class BookServiceImpl implements BookService {
 				.withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
 		);
 		return repository.findAll(example, pageRequest);
+	}
+
+	@Override
+	public Optional<Book> getBookByIsbn(String string) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }
